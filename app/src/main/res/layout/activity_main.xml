@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tvTimer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00:00.00"
+            android:textSize="56sp"
+            app:layout_constraintBottom_toTopOf="@+id/waveformView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.348" />
+
+        <TextView
+            android:id="@+id/tvUserLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:gravity="center"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toTopOf="@+id/waveformView"
+            app:layout_constraintTop_toBottomOf="@+id/tvTimer"
+            tools:layout_editor_absoluteX="26dp"/>
+        <TextView
+            android:id="@+id/tvLatitude"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:gravity="center"
+            android:textColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@+id/tvUserLocation"
+            app:layout_constraintBottom_toTopOf="@+id/waveformView"
+            />
+
+
+        <TextView
+            android:id="@+id/tvLongitude"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@color/black"
+            android:layout_marginTop="120dp"
+            app:layout_constraintBottom_toTopOf="@+id/tvLatitude"
+            app:layout_constraintVertical_bias="0.132"
+            tools:layout_editor_absoluteX="0dp" />
+
+        <com.example.audiorecorder.WaveformView
+            android:id="@+id/waveformView"
+            android:layout_width="match_parent"
+            android:layout_height="400px"
+            android:background="@drawable/border_style"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="-28dp" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="80dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <ImageButton
+                android:id="@+id/btnDelete"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/ic_ripple"
+                android:src="@drawable/round_clear_disable"></ImageButton>
+
+            <ImageButton
+                android:id="@+id/btnRecord"
+                android:layout_width="66dp"
+                android:layout_height="66dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+
+                android:background="@drawable/ic_ripple1"
+                android:src="@drawable/ic_record"></ImageButton>
+
+            <ImageButton
+                android:id="@+id/btnList"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/ic_ripple"
+                android:src="@drawable/round_menu_24"></ImageButton>
+
+            <ImageButton
+                android:id="@+id/btnDone"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/ic_ripple"
+                android:src="@drawable/round_done_24"
+                android:visibility="gone"></ImageButton>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/uploadBtn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="14dp"
+            app:backgroundTint="@color/grayDark"
+            android:background="@drawable/round_file_upload_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <View
+        android:id="@+id/bottomSheetBG"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/opaqueBG"
+        />
+    <include layout="@layout/bottom_sheet"/>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

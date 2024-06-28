@@ -1,0 +1,56 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.AudioRecorder" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+         <item name="colorPrimary">@color/blue</item>
+         <item name="android:textColor">@color/colorText</item>
+         <item name="rippleColor">@color/grayDarkDisabled</item>
+
+    </style>
+
+    <style name="Theme.AudioRecorder" parent="Base.Theme.AudioRecorder" />
+    <style name="TextLayoutStyle" parent="ThemeOverlay.Material3.AutoCompleteTextView.OutlinedBox">
+        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:layout_marginBottom">20dp</item>
+        <item name="boxBackgroundColor">@color/gray</item>
+        <item name="boxStrokeColor">@color/strokeColor</item>
+        <item name="boxCornerRadiusBottomStart">26dp</item>
+        <item name="boxCornerRadiusBottomEnd">26dp</item>
+        <item name="boxCornerRadiusTopStart">26dp</item>
+        <item name="boxCornerRadiusTopEnd">26dp</item>
+    </style>
+
+    <style name="SearchInputStyle" parent="ThemeOverlay.Material3.AutoCompleteTextView.OutlinedBox">
+        <item name="boxBackgroundColor">@color/gray</item>
+        <item name="boxStrokeWidth">0dp</item>
+        <item name="boxStrokeWidthFocused">0dp</item>
+        <item name="android:layout_margin">16dp</item>
+        <item name="boxCornerRadiusTopStart">36dp</item>
+        <item name="boxCornerRadiusTopEnd">36dp</item>
+        <item name="boxCornerRadiusBottomStart">36dp</item>
+        <item name="boxCornerRadiusBottomEnd">36dp</item>
+        <item name="endIconMode">clear_text</item>
+        <item name="startIconDrawable">@drawable/ic_search</item>
+    </style>
+    
+    <style name="tooltip" parent="Widget.MaterialComponents.Tooltip">
+        <item name="backgroundTint">@color/orange</item>
+        <item name="android:visibility">visible</item>
+    </style>
+     <style name="tooltips" parent="Widget.MaterialComponents.Tooltip">
+
+         <item name="shapeAppearanceOverlay">@style/tooltipShOverylay</item>
+        <item name="backgroundTint">@color/orange</item>
+        <item name="android:visibility">visible</item>
+    </style>
+    
+    <style name="tooltipShOverylay">
+        <item name="cornerSize">50%</item>
+    </style>
+
+
+
+
+
+</resources>
