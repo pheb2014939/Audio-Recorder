@@ -95,6 +95,8 @@ dependencies {
 
     implementation("com.google.android.gms:play-services-location:21.0.1")
 
+    implementation ("androidx.room:room-runtime:2.4.2")
+
 //    implementation ("com.github.alexei-frolo:WaveformSeekBar:1.1")
 
 }

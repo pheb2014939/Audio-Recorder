@@ -14,6 +14,7 @@ import android.os.Handler
 import android.os.Looper
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.RadioGroup
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
@@ -38,6 +39,7 @@ import java.io.IOException
 import java.nio.ByteBuffer
 
     class AudioPlayerActivity : AppCompatActivity() {
+        private lateinit var statusRadioGroup: RadioGroup
         private lateinit var records: ArrayList<AudioRecord>
         private lateinit var rangeSeekBar: RangeSeekBar<Long>
         private lateinit var btnCutAudio: Button
@@ -213,190 +215,68 @@ import java.nio.ByteBuffer
             if (h > 0) str = "$h:$str"
             return str
         }
-
-//        private fun cutAudio(startSeconds: Int, endSeconds: Int, filePath: String) {
-//            if (filePath.isEmpty()) {
-//                Toast.makeText(this, "File path is null or empty", Toast.LENGTH_SHORT).show()
-//                return
-//            }
-//            val inputFile = File(filePath)
-//            val originalFileName = inputFile.name
-//            val outputFileName = "cut_$originalFileName"
-//            val path = File(Environment.getExternalStorageDirectory().absolutePath + "/Download")
-//            if (!path.exists()) {
-//                path.mkdirs()
-//            }
-//            val outputFile = File(path, outputFileName)
-//            val startTime = formatTimeFFmpeg(startSeconds)
-//            val duration = formatTimeFFmpeg(endSeconds - startSeconds)
-//            val command = arrayOf(
-//                "-y",
-//                "-i", inputFile.absolutePath,
-//                "-ss", startTime,
-//                "-t", duration,
-//                "-acodec", "mp3",
-//                "-vn",
-//                outputFile.absolutePath
-//            )
-//            FFmpeg.executeAsync(command) { executionId, returnCode ->
-//                runOnUiThread {
-//                    if (returnCode == Config.RETURN_CODE_SUCCESS) {
-//                        val outputPath = outputFile.absolutePath
-//                        saveAudioRecordToDatabase(outputFileName, outputPath, startSeconds, endSeconds - startSeconds)
-//                        mediaPlayer.pause()
-//
-//
-//                    } else {
-//                        Toast.makeText(this@AudioPlayerActivity,"Failed to cut audio",Toast.LENGTH_SHORT).show()
-//                    }
-//                }
-//            }
-//            startActivity(Intent(this, MainActivity::class.java))
-//        }
-//        private fun saveAudioRecordToDatabase(fileName: String, filePath: String, startMillis: Int, durationMillis: Int) {
-//            val durationSeconds = durationMillis * 1000 // Convert milliseconds to seconds
-//            val record = records.find { it.isChecked }
-//            val audioRecord = AudioRecord(
-//                filename = fileName,
-//                filePath = filePath,
-//                timestamp = System.currentTimeMillis(),
-//                duration = dateFormat(durationSeconds),
-//                ampsPath = "",
-//                currentAddress = null,
-//                username = record?.username ?: "",
-//                phonenumber = record?.phonenumber ?: ""
-//            )
-//            val context = applicationContext ?: return
-//            Thread {
-//                getDatabase(context).audioRecordDao().insert(audioRecord)
-//            }.start()
-//        }
-
-
-
-
-        //?
-//    private fun cutAudio(startSeconds: Int, endSeconds: Int, filePath: String) {
-//    if (filePath.isEmpty()) {
-//        Toast.makeText(this, "File path is null or empty", Toast.LENGTH_SHORT).show()
-//        return
-//    }
-//    val inputFile = File(filePath)
-//    val originalFileName = inputFile.name
-//    val path = File(Environment.getExternalStorageDirectory().absolutePath + "/Download")
-//    if (!path.exists()) {
-//        path.mkdirs()
-//    }
-//    val builder = AlertDialog.Builder(this)
-//    val dialogView = layoutInflater.inflate(R.layout.rename_layout, null)
-//    builder.setView(dialogView)
-//    val dialog = builder.create()
-//
-//    val textInput = dialogView.findViewById<TextInputEditText>(R.id.filenameInput)
-//    textInput.setText("cut_$originalFileName")
-//
-//    dialogView.findViewById<Button>(R.id.btnSave).setOnClickListener {
-//        val newFileName = textInput.text.toString()
-//        if (newFileName.isNotEmpty()) {
-//            val outputFile = File(path, newFileName)
-//            val startTime = formatTimeFFmpeg(startSeconds)
-//            val duration = formatTimeFFmpeg(endSeconds - startSeconds)
-//            val command = arrayOf(
-//                "-y",
-//                "-i", inputFile.absolutePath,
-//                "-ss", startTime,
-//                "-t", duration,
-//                "-acodec", "mp3",
-//                "-vn",
-//                outputFile.absolutePath
-//            )
-//            FFmpeg.executeAsync(command) { executionId, returnCode ->
-//                runOnUiThread {
-//                    if (returnCode == Config.RETURN_CODE_SUCCESS) {
-//                        val outputPath = outputFile.absolutePath
-//                        playAudio(outputFile)
-//                        saveAudioRecordToDatabase(newFileName, outputPath, startSeconds, endSeconds - startSeconds)
-//                        startActivity(Intent(this, MainActivity::class.java))
-//                        mediaPlayer.pause()
-//                    } else {
-//                        Toast.makeText(this@AudioPlayerActivity, "Failed to cut audio", Toast.LENGTH_SHORT).show()
-//                    }
-//                }
-//            }
-//        } else {
-//            Toast.makeText(this, "A filename is required", Toast.LENGTH_LONG).show()
-//        }
-//    }
-//    dialogView.findViewById<Button>(R.id.btnCancel).setOnClickListener {
-//        dialog.dismiss()
-//    }
-//    dialog.show()
-//}
-//
-//        private fun saveAudioRecordToDatabase(fileName: String, filePath: String, startMillis: Int, durationMillis: Int) {
-//            val durationSeconds = durationMillis / 1000 // Convert milliseconds to seconds
-//            val audioRecord = AudioRecord(
-//                filename = fileName,
-//                filePath = filePath,
-//                timestamp = System.currentTimeMillis(),
-//                duration = dateFormat(durationSeconds),
-//                ampsPath = "",
-//                currentAddress = null,
-//                username = "",
-//                phonenumber = ""
-//            )
-//            val context = applicationContext ?: return
-//            Thread {
-//                getDatabase(context).audioRecordDao().insert(audioRecord)
-//            }.start()
-//        }
-
-//1111111
-        private fun cutAudio(startSeconds: Int, endSeconds: Int, filePath: String) {
-            if (filePath.isEmpty()) {
-                Toast.makeText(this, "File path is null or empty", Toast.LENGTH_SHORT).show()
-                return
-            }
-            val inputFile = File(filePath)
-            val originalFileName = inputFile.name
-            val outputFileName = "cut_$originalFileName"
-            val path = File(Environment.getExternalStorageDirectory().absolutePath + "/Download")
-            if (!path.exists()) {
-                path.mkdirs()
-            }
-            val outputFile = File(path, outputFileName)
-            val startTime = formatTimeFFmpeg(startSeconds)
-            val duration =  formatTimeFFmpeg(endSeconds - startSeconds)
-            val command = arrayOf(
-                "-y",
-                "-i", inputFile.absolutePath,
-                "-ss", startTime,
-                "-t", duration,
-                "-acodec", "mp3",
-                "-vn",
-                outputFile.absolutePath
-            )
-            FFmpeg.executeAsync(command) { executionId, returnCode ->
-                runOnUiThread {
-                    if (returnCode == Config.RETURN_CODE_SUCCESS) {
-                        val outputPath = outputFile.absolutePath
-                        showSaveDialog(outputFileName, outputPath, startSeconds, endSeconds - startSeconds)
-//                        deleteOldAudioRecordAndFile(filePath)
-//                        playAudio(outputFile)
-                    } else {
-                        Toast.makeText(this@AudioPlayerActivity, "Failed to cut audio", Toast.LENGTH_SHORT).show()
-                    }
-                }
+private fun cutAudio(startSeconds: Int, endSeconds: Int, filePath: String) {
+    if (filePath.isEmpty()) {
+        Toast.makeText(this, "File path is null or empty", Toast.LENGTH_SHORT).show()
+        return
+    }
+    val inputFile = File(filePath)
+    val originalFileName = inputFile.name
+    val outputFileName = "cut_$originalFileName"
+    val path = File(Environment.getExternalStorageDirectory().absolutePath + "/Download")
+    if (!path.exists()) {
+        path.mkdirs()
+    }
+    val outputFile = File(path, outputFileName)
+    val startTime = formatTimeFFmpeg(startSeconds)
+    val duration = formatTimeFFmpeg(endSeconds - startSeconds)
+    val command = arrayOf(
+        "-y",
+        "-i", inputFile.absolutePath,
+        "-ss", startTime,
+        "-t", duration,
+        "-acodec", "mp3",
+        "-vn",
+        outputFile.absolutePath
+    )
+    FFmpeg.executeAsync(command) { executionId, returnCode ->
+        runOnUiThread {
+            if (returnCode == Config.RETURN_CODE_SUCCESS) {
+                val outputPath = outputFile.absolutePath
+                showSaveDialog(outputFileName, outputPath, startSeconds, endSeconds - startSeconds, filePath)
+            } else {
+                Toast.makeText(this@AudioPlayerActivity, "Failed to cut audio", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+}
 
-        private fun showSaveDialog(defaultFileName: String, filePath: String, startMillis: Int, durationMillis: Int) {
-            val dialogView = layoutInflater.inflate(R.layout.rename_layout1, null)
-            val filenameInput = dialogView.findViewById<TextInputEditText>(R.id.filenameInput)
-            val usernameInput = dialogView.findViewById<TextInputEditText>(R.id.usernameInput)
-            val phonenumberInput = dialogView.findViewById<TextInputEditText>(R.id.phonenumberInput)
 
+private fun showSaveDialog(defaultFileName: String, filePath: String, startMillis: Int, durationMillis: Int, originalFilePath: String) {
+    val dialogView = layoutInflater.inflate(R.layout.rename_layout1, null)
+    val filenameInput = dialogView.findViewById<TextInputEditText>(R.id.filenameInput)
+    val usernameInput = dialogView.findViewById<TextInputEditText>(R.id.usernameInput)
+    val phonenumberInput = dialogView.findViewById<TextInputEditText>(R.id.phonenumberInput)
+    val addressInput = dialogView.findViewById<TextInputEditText>(R.id.addressInput)
+    val areaCodeInput = dialogView.findViewById<TextInputEditText>(R.id.areaCodeInput)
+
+    val context = applicationContext ?: return
+
+    // Truy xuất bản ghi gốc từ cơ sở dữ liệu
+    Thread {
+        val audioRecordDao = getDatabase(context).audioRecordDao()
+        val originalRecord = audioRecordDao.getRecordByFilePath(originalFilePath)
+
+        runOnUiThread {
+            // Thiết lập giá trị mặc định cho các trường nhập liệu
             filenameInput.setText(defaultFileName)
+            if (originalRecord != null) {
+                usernameInput.setText(originalRecord.username)
+                phonenumberInput.setText(originalRecord.phonenumber)
+                addressInput.setText(originalRecord.currentAddress)
+                areaCodeInput.setText(originalRecord.areaCode)
+            }
+
             mediaPlayer.pause()
 
             val dialog = AlertDialog.Builder(this)
@@ -405,54 +285,41 @@ import java.nio.ByteBuffer
                     val filename = filenameInput.text.toString()
                     val username = usernameInput.text.toString()
                     val phonenumber = phonenumberInput.text.toString()
-                    saveAudioRecordToDatabase(filename, filePath, startMillis, durationMillis, username, phonenumber)
+                    val currentAddress = addressInput.text.toString()
+                    val areaCode = areaCodeInput.text.toString()
+                    saveAudioRecordToDatabase(filename, filePath, startMillis, durationMillis, username, phonenumber, currentAddress, areaCode,  originalFilePath)
                     startActivity(Intent(this, MainActivity::class.java))
-
                 }
                 .setNegativeButton("Cancel", null)
                 .create()
 
             dialog.show()
         }
-        private fun saveAudioRecordToDatabase(fileName: String, filePath: String, startMillis: Int, durationMillis: Int, username: String,phonenumber: String) {
+    }.start()
+}
+        private fun saveAudioRecordToDatabase(fileName: String, filePath: String, startMillis: Int, durationMillis: Int, username: String, phonenumber: String,currentAddress: String,areaCode: String, originalFilePath: String) {
             val durationSeconds = durationMillis * 1000 // Convert milliseconds to seconds
-            val audioRecord = AudioRecord(
-                filename = fileName,
-                filePath = filePath,
-                timestamp = System.currentTimeMillis(),
-                duration = dateFormat(durationSeconds),
-                ampsPath = "",
-                currentAddress = null,
-                username = username,
-                phonenumber = phonenumber,
-                gps = ""
-            )
             val context = applicationContext ?: return
+
             Thread {
-                getDatabase (context).audioRecordDao().insert(audioRecord)
+                val audioRecordDao = getDatabase(context).audioRecordDao()
+                val originalRecord = audioRecordDao.getRecordByFilePath(originalFilePath)
+
+                val audioRecord = AudioRecord(
+                    filename = fileName,
+                    filePath = filePath,
+                    timestamp = System.currentTimeMillis(),
+                    duration = dateFormat(durationSeconds),
+                    currentAddress = currentAddress,
+                    username = username,
+                    phonenumber = phonenumber,
+                    gps = originalRecord?.gps ?: "",
+                    areaCode = areaCode
+                )
+
+                audioRecordDao.insert(audioRecord)
             }.start()
         }
-
-
-//        private fun saveAudioRecordToDatabase(fileName: String,filePath: String,startMillis: Int,durationMillis: Int,username: String,phonenumber: String) {
-//            val durationSeconds = durationMillis / 1000 // Convert milliseconds to seconds
-//            val audioRecord = AudioRecord(
-//                filename = fileName,
-//                filePath = filePath,
-//                timestamp = System.currentTimeMillis(),
-//                duration = dateFormat(durationSeconds),
-//                ampsPath = "",
-//                currentAddress = null,
-//                username = username,
-//                phonenumber = phonenumber
-//            )
-//            val context = applicationContext ?: return
-//            Thread {
-//                getDatabase(context).audioRecordDao().insert(audioRecord)
-//            }.start()
-//        }
-
-
 
         private fun deleteOldAudioRecordAndFile(filePath: String) {
             val context = applicationContext ?: return
@@ -468,8 +335,6 @@ import java.nio.ByteBuffer
                 }
             }.start()
         }
-
-
         private fun formatTimeFFmpeg(seconds: Int): String {
             val hours = seconds / 3600
             val minutes = (seconds % 3600) / 60
@@ -483,7 +348,6 @@ import java.nio.ByteBuffer
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             startActivity(intent)
         }
-
     }
 
 

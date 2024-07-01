@@ -81,14 +81,14 @@ class MainActivity : AppCompatActivity(), Timer.OnTimerTickListener {
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
     private lateinit var usernameInput: TextInputEditText
     private lateinit var phonenumberInput: TextInputEditText
+    private lateinit var areaCodeInput: TextInputEditText
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        // Initialize fusedLocationProviderClient
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-        // Initialize UI elements after setContentView
-        btnDelete = findViewById(R.id.btnDelete)
+         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+         btnDelete = findViewById(R.id.btnDelete)
         btnDone = findViewById(R.id.btnDone)
         btnList = findViewById(R.id.btnList)
         btnRecord = findViewById(R.id.btnRecord)
@@ -100,11 +100,10 @@ class MainActivity : AppCompatActivity(), Timer.OnTimerTickListener {
         btnCancel = findViewById(R.id.btnCancel)
         btnOk = findViewById(R.id.btnOk)
         uploadBtn = findViewById(R.id.uploadBtn)
-
+        areaCodeInput = findViewById(R.id.areaCodeInput)
         tvUserLocation = findViewById(R.id.tvUserLocation)
         tvLatitude = findViewById(R.id.tvLatitude)
         tvLongitude = findViewById(R.id.tvLongitude)
-        // Initialize UI elements after setContentView
         usernameInput = findViewById(R.id.usernameInput)
         phonenumberInput = findViewById(R.id.phonenumberInput)
 
@@ -285,18 +284,9 @@ class MainActivity : AppCompatActivity(), Timer.OnTimerTickListener {
         }
         val filePath = "$dirPath$newFileName.mp3"
         val timestamp = Date().time
-        val ampsPath = "$dirPath$newFileName.amps"
-        try {
-            val fos = FileOutputStream(ampsPath)
-            val out = ObjectOutputStream(fos)
-            out.writeObject(amplitudes)
-            fos.close()
-            out.close()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
         val gps = "${tvLatitude.text},${tvLongitude.text}"
-        val record = AudioRecord(newFileName, filePath, timestamp, duration, ampsPath, currentAddress, username, phonenumber, gps)
+        val areaCode = areaCodeInput.text.toString()
+        val record = AudioRecord(newFileName, filePath, timestamp, duration, currentAddress, username, phonenumber, gps, areaCode )
         GlobalScope.launch {
             db.audioRecordDao().insert(record)
         }
@@ -308,6 +298,12 @@ class MainActivity : AppCompatActivity(), Timer.OnTimerTickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }, 100)
     }
+
+    private fun hideKeyboard(view: View) {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
 
     override fun onTimerTick(duration: String) {
         tvTimer.text = duration
@@ -322,6 +318,8 @@ class MainActivity : AppCompatActivity(), Timer.OnTimerTickListener {
         filenameInput.text?.clear()
         usernameInput.text?.clear()
         phonenumberInput.text?.clear()
+        areaCodeInput.text?.clear()
+
     }
 
 

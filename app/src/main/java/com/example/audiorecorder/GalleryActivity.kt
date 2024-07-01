@@ -38,7 +38,7 @@ class GalleryActivity : AppCompatActivity(), OnItemClickListener {
     private lateinit var btnSelectAll: ImageButton
     private lateinit var bottomSheet: LinearLayout
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
-    private lateinit var btnEdit: ImageButton
+//    private lateinit var btnEdit: ImageButton
     private lateinit var btnDelete: ImageButton
     private lateinit var btnRename: ImageButton
     private lateinit var tvDelete: TextView
@@ -64,7 +64,7 @@ class GalleryActivity : AppCompatActivity(), OnItemClickListener {
         bottomSheet = findViewById(R.id.bottomSheet)
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        btnEdit = findViewById(R.id.btnEdit)
+//        btnEdit = findViewById(R.id.btnEdit)
         btnDelete = findViewById(R.id.btnDelete)
         btnRename = findViewById(R.id.btnRename)
         tvDelete = findViewById(R.id.tvDelete)
@@ -109,26 +109,26 @@ class GalleryActivity : AppCompatActivity(), OnItemClickListener {
             }
         }
 
-        btnEdit.setOnClickListener {
-            val selectedRecord = records.find { it.isChecked }
-            if (selectedRecord != null) {
-                val intent = Intent(this@GalleryActivity, TrimActivity::class.java).apply {
-                    putExtra("filepath", selectedRecord.filePath)
-                    // Add any other extras needed by TrimActivity
-                }
-                startActivity(intent)
-            } else {
-                // Show a message to the user that no item is selected
-            }
-        }
+//        btnEdit.setOnClickListener {
+////            val selectedRecord = records.find { it.isChecked }
+////            if (selectedRecord != null) {
+////                val intent = Intent(this@GalleryActivity, TrimActivity::class.java).apply {
+////                    putExtra("filepath", selectedRecord.filePath)
+////                    // Add any other extras needed by TrimActivity
+////                }
+////                startActivity(intent)
+////            } else {
+////                // Show a message to the user that no item is selected
+////            }
+//        }
 
         btnDelete.setOnClickListener {
             val builder = AlertDialog.Builder(this)
-            builder.setTitle("Delete records?")
+            builder.setTitle("Xoá bản ghi?")
             val nbRecords = records.count { it.isChecked }
-            builder.setMessage("Are you sure you want to delete $nbRecords record(s)?")
+            builder.setMessage("Bạn có chắc chắn muốn xoá $nbRecords bản ghi?")
 
-            builder.setPositiveButton("Delete") { _, _ ->
+            builder.setPositiveButton("Xoá") { _, _ ->
                 val toDelete = records.filter { it.isChecked }.toTypedArray()
                 GlobalScope.launch {
                     db.audioRecordDao().delete(toDelete)
@@ -139,7 +139,7 @@ class GalleryActivity : AppCompatActivity(), OnItemClickListener {
                     }
                 }
             }
-            builder.setNegativeButton("Cancel") { _, _ -> }
+            builder.setNegativeButton("Huỷ") { _, _ -> }
             val dialog = builder.create()
             dialog.show()
         }
@@ -161,10 +161,15 @@ class GalleryActivity : AppCompatActivity(), OnItemClickListener {
                 val textInput2 = dialogView.findViewById<TextInputEditText>(R.id.phonenumberInput)
                 textInput2.setText(record.phonenumber)
 
+                val textInput3 = dialogView.findViewById<TextInputEditText>(R.id.addressInput)
+                textInput3.setText(record.currentAddress)
+
+
                 dialogView.findViewById<Button>(R.id.btnSave).setOnClickListener {
                     val input = textInput.text.toString()
                     val input1 = textInput1.text.toString()
                     val input2 = textInput2.text.toString()
+                    val input3 = textInput3.text.toString()
                     var valid = true
 
                     if (input.isEmpty()) {
@@ -179,11 +184,16 @@ class GalleryActivity : AppCompatActivity(), OnItemClickListener {
                         Toast.makeText(this, "A phone number is required", Toast.LENGTH_LONG).show()
                         valid = false
                     }
+                    if (input3.isEmpty()) {
+                        Toast.makeText(this, "A address is required", Toast.LENGTH_LONG).show()
+                        valid = false
+                    }
 
                     if (valid) {
                         record.filename = input
                         record.username = input1
                         record.phonenumber = input2
+                        record.currentAddress = input3
                         GlobalScope.launch {
                             db.audioRecordDao().update(record)
                             runOnUiThread {
@@ -215,8 +225,8 @@ class GalleryActivity : AppCompatActivity(), OnItemClickListener {
     }
 
     private fun disableRename() {
-        btnEdit.isClickable = false
-        btnEdit.backgroundTintList =
+        btnDelete.isClickable = false
+        btnDelete.backgroundTintList =
             ResourcesCompat.getColorStateList(resources, R.color.grayDarkDisabled, theme)
         tvRename.setTextColor(
             ResourcesCompat.getColorStateList(
@@ -241,8 +251,8 @@ class GalleryActivity : AppCompatActivity(), OnItemClickListener {
     }
 
     private fun enableRename() {
-        btnEdit.isClickable = true
-        btnEdit.backgroundTintList =
+        btnDelete.isClickable = true
+        btnDelete.backgroundTintList =
             ResourcesCompat.getColorStateList(resources, R.color.grayDark, theme)
         tvRename.setTextColor(ResourcesCompat.getColorStateList(resources, R.color.grayDark, theme))
     }

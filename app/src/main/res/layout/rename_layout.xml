@@ -58,21 +58,36 @@
             android:padding="16dp"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-
     <com.google.android.material.textfield.TextInputLayout
         style="@style/TextLayoutStyle"
         android:layout_width="match_parent"
-        android:layout_marginTop="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="0dp"
-        android:layout_height="wrap_content"/>
+        android:layout_margin="0dp">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/addressInput"
+            android:hint="Nhập địc chỉ "
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:padding="16dp"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
 
-    <com.google.android.material.textfield.TextInputLayout
-        style="@style/TextLayoutStyle"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="0dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+<!--    <com.google.android.material.textfield.TextInputLayout-->
+<!--        style="@style/TextLayoutStyle"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_marginTop="0dp"-->
+<!--        android:layout_marginBottom="0dp"-->
+<!--        android:layout_height="wrap_content"/>-->
+
+
+<!--    <com.google.android.material.textfield.TextInputLayout-->
+<!--        style="@style/TextLayoutStyle"-->
+<!--        android:layout_marginTop="0dp"-->
+<!--        android:layout_marginBottom="0dp"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"/>-->
 
     <LinearLayout
         android:gravity="center"

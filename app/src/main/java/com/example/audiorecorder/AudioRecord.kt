@@ -10,15 +10,14 @@ data class AudioRecord(
     var filePath: String,
     var timestamp: Long,
     var duration: String,
-    var ampsPath: String,
+//    var ampsPath: String,
     var currentAddress: String?,
     var username: String?,
     var phonenumber: String?,
-    var gps: String?
+    var gps: String?,
+    var areaCode: String?,
 
-
-
-) {
+    ) {
     @PrimaryKey(autoGenerate = true)
     var id =0
     @Ignore
