@@ -270,106 +270,27 @@ private fun cutAudio(startSeconds: Int, endSeconds: Int, filePath: String) {
         }
     }
 
-//    private fun uploadAudioToMySQL(
-//        filename: String,
-//        filePath: String,
-//        startMillis: Int,
-//        durationMillis: Int,
-//        username: String,
-//        phonenumber: String,
-//        currentAddress: String,
-//        areaCode: String,
-//        status: Int,
-//        outputPath: String
-//    ) {
-//        val audioBytes = File(outputPath).readBytes()
-//        val query = "INSERT INTO Audio (audio_Name, mime_Type) VALUES (?, ?)"
-//
-//        try {
-//            conn?.use { connection ->
-//                connection.prepareStatement(query).use { statement ->
-//                    statement.setString(1, filename)
-//                    statement.setString(2, "audio/mp3") // Đổi kiểu MIME tùy thuộc vào loại file âm thanh bạn sử dụng
-//                    // Thêm các tham số còn lại vào câu lệnh INSERT nếu cần
-//                    // statement.setInt(3, startMillis)
-//                    // statement.setInt(4, durationMillis)
-//                    // statement.setString(5, username)
-//                    // statement.setString(6, phonenumber)
-//                    // statement.setString(7, currentAddress)
-//                    // statement.setString(8, areaCode)
-//                    // statement.setInt(9, status)
-//
-//                    val rowsAffected = statement.executeUpdate()
-//
-//                    if (rowsAffected == 1) {
-//                        Log.d("UploadToMySQL", "Uploaded successfully to MySQL")
-//                        runOnUiThread {
-//                            Toast.makeText(this, "Uploaded successfully!", Toast.LENGTH_SHORT).show()
-//                        }
-//                    } else {
-//                        throw SQLException("Creating Audio failed, no rows affected.")
-//                    }
-//                }
-//            }
-//        } catch (e: SQLException) {
-//            Log.e("UploadToMySQL", "SQLException: ${e.message}")
-//            runOnUiThread {
-//                Toast.makeText(this, "Failed to upload to MySQL: ${e.message}", Toast.LENGTH_SHORT).show()
-//            }
-//        } catch (e: Exception) {
-//            Log.e("UploadToMySQL", "Exception: ${e.message}")
-//            runOnUiThread {
-//                Toast.makeText(this, "Failed to upload to MySQL: ${e.message}", Toast.LENGTH_SHORT).show()
-//            }
-//        } finally {
-//            try {
-//                conn?.close()
-//            } catch (e: SQLException) {
-//                Log.e("UploadToMySQL", "Failed to close connection: ${e.message}")
-//            }
-//        }
-//    }
-
-//    fun uploadAudioToMySQL(): List<String> {
-//        val query = "SELECT * FROM Audio"
-////        Audio (audio_Name, mime_Type) VALUES (?, ?)
-//        val resultList = mutableListOf<String>()
-//
-//        // Kết nối đến cơ sở dữ liệu
-//        val connection = ConnectionClass().CNN()
-//
-//        connection?.use { conn ->
-//            try {
-//                conn.createStatement().use { statement ->
-//                    val resultSet = statement.executeQuery(query)
-//
-//                    // Duyệt qua kết quả và lưu vào danh sách
-//                    while (resultSet.next()) {
-//                        val id = resultSet.getInt("audio_Name")
-//                        val name = resultSet.getString("mime_Type")
-//                        val resultString = "ID: $id, Name: $name"
-//                        resultList.add(resultString)
-//                    }
-//                }
-//            } catch (e: SQLException) {
-//                println("SQLException: ${e.message}")
-//            }
-//        }
-//        return resultList
-//    }
-    private fun uploadAudioToMySQL(filename: String, filePath: String, startMillis: Int, durationMillis: Int, username: String, phonenumber: String, currentAddress: String, areaCode: String, status: Int, outputPath: String) {
+    private fun uploadAudioToMySQL(filename: String, filePath: String, startMillis: Int, durationMillis: Int, username: String, phonenumber: String, currentAddress: String, areaCode: String, gps: String, status: Int, outputPath: String) {
+    val context = applicationContext ?: return
+    val audioRecordDao = getDatabase(context).audioRecordDao()
+    val originalRecord = audioRecordDao.getRecordByFilePath(filePath)
     val audioBytes = File(outputPath).readBytes()
+
     // Thực hiện kết nối và tải lên cơ sở dữ liệu MySQL
     val conn = connectionClass.CNN()
-    val query = "INSERT INTO Audio (audio_Name, mime_Type, time_stamp, audio_Size, audio_Address, audio_LeakStatus) VALUES (?, ?, ?, ?, ?, ?)"
+    val query = "INSERT INTO Audio (audio_Name, mime_Type, time_stamp, audio_Size, audio_Address, username, phonenumber, areaCode, gps, audio_LeakStatus) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
     try {
         conn?.prepareStatement(query)?.use { statement ->
             statement.setString(1, filename)
             statement.setString(2, "audio/mp3") // Đổi kiểu MIME tùy thuộc vào loại file âm thanh bạn sử dụng
             statement.setTimestamp(3, Timestamp(System.currentTimeMillis())) // Sửa lại thành setTimestamp và thêm dấu đóng ngoặc cho System.currentTimeMillis()
             statement.setInt(4, audioBytes.size)
-            statement.setString(5, filePath)
-            statement.setInt(6, status)
+            statement.setString(5, originalRecord?.currentAddress)
+            statement.setString(6, originalRecord?.username)
+            statement.setString(7, originalRecord?.phonenumber)
+            statement.setString(8, originalRecord?.areaCode)
+            statement.setString(9, originalRecord?.gps)
+            statement.setInt(10, status)
 
             statement.executeUpdate()
             Log.d("UploadToMySQL", "Uploaded successfully to MySQL")
@@ -438,10 +359,9 @@ private fun cutAudio(startSeconds: Int, endSeconds: Int, filePath: String) {
                         R.id.radioButton1 -> 1
                         else -> -1 // Handle case where no RadioButton is checked
                 }
-                    saveAudioRecordToDatabase(filename, filePath, startMillis, durationMillis, username, phonenumber, currentAddress, areaCode, status, originalFilePath)
-                    // Tải lên file cắt được lên MySQL
-//                    uploadAudioToMySQL(filename, filePath, startMillis, durationMillis, username, phonenumber, currentAddress, areaCode, status, originalFilePath)
-//                    uploadAudioToMySQL()
+                    val gps = originalRecord?.gps ?: ""
+
+                    saveAudioRecordToDatabase(filename, filePath, startMillis, durationMillis, username, phonenumber, currentAddress, areaCode, gps, status, originalFilePath)
                 }
 
                 .setNegativeButton("Cancel", null)
@@ -453,7 +373,7 @@ private fun cutAudio(startSeconds: Int, endSeconds: Int, filePath: String) {
 }
 
 
-    private fun saveAudioRecordToDatabase(fileName: String, filePath: String, startMillis: Int, durationMillis: Int, username: String, phonenumber: String,currentAddress: String,areaCode: String, status: Int, originalFilePath: String) {
+    private fun saveAudioRecordToDatabase(fileName: String, filePath: String, startMillis: Int, durationMillis: Int, username: String, phonenumber: String,currentAddress: String, areaCode: String, gps: String, status: Int, originalFilePath: String) {
             val durationSeconds = durationMillis * 1000 // Convert milliseconds to seconds
             val context = applicationContext ?: return
 
@@ -476,65 +396,13 @@ private fun cutAudio(startSeconds: Int, endSeconds: Int, filePath: String) {
 
                 audioRecordDao.insert(audioRecord)
                 if (status == 1) {
-                    uploadAudioToMySQL(fileName, filePath, startMillis, durationMillis, username, phonenumber, currentAddress, areaCode, status, originalFilePath)
+                    uploadAudioToMySQL(fileName, filePath, startMillis, durationMillis, username, phonenumber, currentAddress, areaCode, gps, status, originalFilePath)
                 }
             }.start()
         startActivity(Intent(this, MainActivity::class.java))
 
     }
-//    private fun uploadAudioToMySQL(filename: String, filePath: String, startMillis: Int, durationMillis: Int, username: String, phonenumber: String, currentAddress: String, areaCode: String, status: Int, outputPath: String) {
-//        val audioBytes = File(outputPath).readBytes()
-//        // Thực hiện kết nối và tải lên cơ sở dữ liệu MySQL
-//        val connection = ConnectionClass().CNN()
-//        val query = "INSERT INTO Audio (audio_Name, mime_Type, time_stamp, audio_Size, audio_Address, audio_LeakStatus) " +
-//                "VALUES (?, ?, ?, ?, ?, ?)"
-//        try {
-//            connection?.prepareStatement(query)?.use { statement ->
-//                statement.setString(1, filename)
-//                statement.setString(2, "audio/mp3") // Đổi kiểu MIME tùy thuộc vào loại file âm thanh bạn sử dụng
-//                statement.setLong(3, System.currentTimeMillis())
-//                statement.setInt(4, audioBytes.size)
-//                statement.setString(5, filePath)
-//                statement.setInt(6, status)
-//                statement.executeUpdate()
-//                Log.d("UploadToMySQL", "Uploaded successfully to MySQL")
-//                Toast.makeText(this, "Uploaded successfully!!!!!!!", Toast.LENGTH_SHORT).show()
-//            }
-//        } catch (e: SQLException) {
-//            Log.e("UploadToMySQL", "Failed to upload to MySQL: ${e.message}")
-//            Toast.makeText(this, "Failed to upload to MySQL", Toast.LENGTH_SHORT).show()
-//        } finally {
-//            connection?.close()
-//        }
-//    }
-//private fun uploadAudioToMySQL(filename: String, filePath: String, startMillis: Int, durationMillis: Int, username: String, phonenumber: String, currentAddress: String, areaCode: String, status: Int, outputPath: String) {
-//    val audioBytes = File(outputPath).readBytes()
-//    // Thực hiện kết nối và tải lên cơ sở dữ liệu MySQL
-//    val conn = connectionClass.CNN()
-//    val query = "INSERT INTO Audio (audio_Name, mime_Type, time_stamp, audio_Size, audio_Address, audio_LeakStatus) VALUES (?, ?, ?, ?, ?, ?)"
-//    try {
-//        conn?.prepareStatement(query)?.use { statement ->
-//            statement.setString(1, filename)
-//            statement.setString(2, "audio/mp3") // Đổi kiểu MIME tùy thuộc vào loại file âm thanh bạn sử dụng
-//            statement.setLong(3, System.currentTimeMillis())
-//            statement.setInt(4, audioBytes.size)
-//            statement.setString(5, filePath)
-//            statement.setInt(6, status)
-//            statement.executeUpdate()
-//            Log.d("UploadToMySQL", "Uploaded successfully to MySQL")
-//            runOnUiThread {
-//                Toast.makeText(this, "Uploaded successfully!!!!!!!", Toast.LENGTH_SHORT).show()
-//            }
-//        }
-//    } catch (e: SQLException) {
-//        Log.e("UploadToMySQL", "Failed to upload to MySQL: ${e.message}")
-//        runOnUiThread {
-//            Toast.makeText(this, "Failed to upload to MySQL", Toast.LENGTH_SHORT).show()
-//        }
-//    } finally {
-//        conn?.close()
-//    }
-//}
+
 
     //        private fun deleteOldAudioRecordAndFile(filePath: String) {
 //            val context = applicationContext ?: return
@@ -593,25 +461,5 @@ private fun cutAudio(startSeconds: Int, endSeconds: Int, filePath: String) {
                 }
             }
         }
-
-
-
-//    private fun connect() {
-//        lifecycleScope.launch(Dispatchers.IO) {
-//            try {
-//                conn = connectionClass.CNN()
-//                val str = if (conn == null) {
-//                    "Error in connection with MySQL server"
-//                } else {
-//                    "Connected with MySQL serrrrrrrver"
-//                }
-//                withContext(Dispatchers.Main) {
-//                    Toast.makeText(this@AudioPlayerActivity, str, Toast.LENGTH_LONG).show()
-//                }
-//            } catch (e: Exception) {
-//                throw RuntimeException(e)
-//            }
-//        }
-//    }
 
     }
