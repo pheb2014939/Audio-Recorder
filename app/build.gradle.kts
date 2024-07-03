@@ -98,5 +98,9 @@ dependencies {
     implementation ("androidx.room:room-runtime:2.4.2")
 
 //    implementation ("com.github.alexei-frolo:WaveformSeekBar:1.1")
+    implementation ("com.arthenica:mobile-ffmpeg-full:4.4")
+//    implementation ("mysql:mysql-connector-java:8.0.26")
+    implementation("mysql:mysql-connector-java:5.1.49")
+    implementation("com.zaxxer:HikariCP:5.0.1")
 
 }

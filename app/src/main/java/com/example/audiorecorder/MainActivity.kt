@@ -43,7 +43,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 const val REQUEST_CODE = 200
 class MainActivity : AppCompatActivity(), Timer.OnTimerTickListener {
-
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private var currentAddress: String? = null
     private lateinit var amplitudes: ArrayList<Float>
@@ -76,7 +75,6 @@ class MainActivity : AppCompatActivity(), Timer.OnTimerTickListener {
     private lateinit var filenameInput: TextInputEditText
     private lateinit var btnCancel: MaterialButton
     private lateinit var btnOk: MaterialButton
-    private lateinit var uploadBtn: MaterialButton
     private lateinit var db: AppDatabase
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
     private lateinit var usernameInput: TextInputEditText
@@ -99,7 +97,6 @@ class MainActivity : AppCompatActivity(), Timer.OnTimerTickListener {
         filenameInput = findViewById(R.id.filenameInput)
         btnCancel = findViewById(R.id.btnCancel)
         btnOk = findViewById(R.id.btnOk)
-        uploadBtn = findViewById(R.id.uploadBtn)
         areaCodeInput = findViewById(R.id.areaCodeInput)
         tvUserLocation = findViewById(R.id.tvUserLocation)
         tvLatitude = findViewById(R.id.tvLatitude)
@@ -131,12 +128,10 @@ class MainActivity : AppCompatActivity(), Timer.OnTimerTickListener {
             startActivity(Intent(this, GalleryActivity::class.java))
         }
 
-        uploadBtn.setOnClickListener{
-            startActivity(Intent(this, UploadActivity::class.java))
-        }
 
         btnDone.setOnClickListener {
             stopRecorder()
+
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
             bottomSheetBG.visibility = View.VISIBLE
             filenameInput.setText(filename)
@@ -155,8 +150,8 @@ class MainActivity : AppCompatActivity(), Timer.OnTimerTickListener {
         }
 
         bottomSheetBG.setOnClickListener {
-            File("$dirPath$filename.mp3").delete()
-            dismiss()
+//            File("$dirPath$filename.mp3").delete()
+//            dismiss()
         }
         btnDelete.setOnClickListener {
             stopRecorder()
@@ -270,9 +265,7 @@ class MainActivity : AppCompatActivity(), Timer.OnTimerTickListener {
         amplitudes = waveformView.clear()
     }
 
-    fun getAmplitudes(): List<Float> {
-        return amplitudes
-    }
+
 
     private fun save() {
         val newFileName = filenameInput.text.toString()
@@ -286,7 +279,8 @@ class MainActivity : AppCompatActivity(), Timer.OnTimerTickListener {
         val timestamp = Date().time
         val gps = "${tvLatitude.text},${tvLongitude.text}"
         val areaCode = areaCodeInput.text.toString()
-        val record = AudioRecord(newFileName, filePath, timestamp, duration, currentAddress, username, phonenumber, gps, areaCode )
+        val status = 0
+        val record = AudioRecord(newFileName, filePath, timestamp, duration, currentAddress, username, phonenumber, gps, areaCode , status)
         GlobalScope.launch {
             db.audioRecordDao().insert(record)
         }

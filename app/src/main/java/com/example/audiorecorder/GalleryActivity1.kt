@@ -1,86 +1,91 @@
 package com.example.audiorecorder
 
-import android.content.ContentUris
+import android.app.PendingIntent.getActivity
 import android.content.Intent
+import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
-import android.provider.DocumentsContract
-import android.provider.MediaStore
+import android.provider.OpenableColumns
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
-import com.google.android.material.textfield.TextInputEditText
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import androidx.lifecycle.lifecycleScope
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileInputStream
-
-class GalleryActivity : AppCompatActivity(), OnItemClickListener {
-
+import java.io.InputStream
+import java.security.AccessController.getContext
+import java.sql.Connection
+import java.sql.PreparedStatement
+import java.sql.SQLException
+import java.sql.Timestamp
+import java.util.concurrent.Executors
+class GalleryActivity1 : AppCompatActivity(), OnItemClickListener {
     private lateinit var searchInput: TextInputEditText
-    private lateinit var ic_backIV: ImageView
     private lateinit var records: ArrayList<AudioRecord>
     private lateinit var mAdapter: Adapter
     private lateinit var db: AppDatabase
     private lateinit var rv: RecyclerView
-    private lateinit var toolbar: MaterialToolbar
+    private lateinit var ic_backIV: ImageView
+        private lateinit var toolbar: MaterialToolbar
     private lateinit var editBar: View
     private lateinit var btnClose: ImageButton
     private lateinit var btnSelectAll: ImageButton
     private lateinit var bottomSheet: LinearLayout
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
+//    private lateinit var btnEdit: ImageButton
     private lateinit var btnDelete: ImageButton
     private lateinit var btnRename: ImageButton
     private lateinit var tvDelete: TextView
     private lateinit var tvRename: TextView
     private lateinit var ListNN: TextView
+    private lateinit var ic_upload: ImageView
+    private lateinit var danhsachTV: TextView
     private var allChecked = false
     private lateinit var connectionClass: ConnectionClass
-
-    //
-    private val PICK_AUDIO_REQUEST = 1
-
+    private var conn: Connection? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_gallery)
+        setContentView(R.layout.activity_gallery1)
+
+        // Initialize UI elements after setContentView
         rv = findViewById(R.id.rv)
         searchInput = findViewById(R.id.searchInput)
-        toolbar = findViewById(R.id.toolbar)
-        toolbar.setNavigationOnClickListener {
-            onBackPressed()
-        }
-        editBar = findViewById(R.id.editBar)
         ic_backIV = findViewById(R.id.ic_backIV)
+        editBar = findViewById(R.id.editBar)
         btnClose = findViewById(R.id.btnClose)
         btnSelectAll = findViewById(R.id.btnSelectAll)
         bottomSheet = findViewById(R.id.bottomSheet)
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+//        btnEdit = findViewById(R.id.btnEdit)
+        toolbar = findViewById(R.id.toolbar)
         btnDelete = findViewById(R.id.btnDelete)
         btnRename = findViewById(R.id.btnRename)
         tvDelete = findViewById(R.id.tvDelete)
         tvRename = findViewById(R.id.tvRename)
         ListNN = findViewById(R.id.ListNN)
+        danhsachTV = findViewById(R.id.danhsachTV)
         records = ArrayList()
         db = Room.databaseBuilder(
             this,
@@ -103,17 +108,18 @@ class GalleryActivity : AppCompatActivity(), OnItemClickListener {
 
             override fun afterTextChanged(s: Editable?) {}
         })
-        btnClose.setOnClickListener {
-            leaveEditMode()
-        }
         ic_backIV.setOnClickListener{
             startActivity(Intent(this, MainActivity::class.java))
+        }
+        btnClose.setOnClickListener {
+            leaveEditMode()
         }
         ListNN.setOnClickListener {
             startActivity(Intent(this, GalleryActivity1::class.java))
         }
-
-
+        danhsachTV.setOnClickListener {
+                    startActivity(Intent(this, GalleryActivity::class.java))
+                }
         btnSelectAll.setOnClickListener {
             allChecked = !allChecked
             records.forEach { it.isChecked = allChecked }
@@ -147,7 +153,6 @@ class GalleryActivity : AppCompatActivity(), OnItemClickListener {
             val dialog = builder.create()
             dialog.show()
         }
-
         btnRename.setOnClickListener {
             val builder = AlertDialog.Builder(this)
             val dialogView = this.layoutInflater.inflate(R.layout.rename_layout, null)
@@ -168,24 +173,12 @@ class GalleryActivity : AppCompatActivity(), OnItemClickListener {
                 val textInput3 = dialogView.findViewById<TextInputEditText>(R.id.addressInput)
                 textInput3.setText(record.currentAddress)
 
-                val statusRadioGroup: RadioGroup = dialogView.findViewById(R.id.statusRadioGroup)
-                when (record.status) {
-                    0 -> statusRadioGroup.check(R.id.radioButton) // Bình thường
-                    1 -> statusRadioGroup.check(R.id.radioButton1) // Nghi ngờ
-                    // Các trường hợp khác có thể xét thêm tại đây
-                }
 
                 dialogView.findViewById<Button>(R.id.btnSave).setOnClickListener {
                     val input = textInput.text.toString()
                     val input1 = textInput1.text.toString()
                     val input2 = textInput2.text.toString()
                     val input3 = textInput3.text.toString()
-                    val status = when (statusRadioGroup.checkedRadioButtonId) {
-                        R.id.radioButton -> 0
-                        R.id.radioButton1 -> 1
-                        else -> -1 // Handle case where no RadioButton is checked
-                    }
-
                     var valid = true
 
                     if (input.isEmpty()) {
@@ -205,15 +198,11 @@ class GalleryActivity : AppCompatActivity(), OnItemClickListener {
                         valid = false
                     }
 
-
                     if (valid) {
                         record.filename = input
                         record.username = input1
                         record.phonenumber = input2
                         record.currentAddress = input3
-                        record.status = status
-
-
                         GlobalScope.launch {
                             db.audioRecordDao().update(record)
                             runOnUiThread {
@@ -222,8 +211,6 @@ class GalleryActivity : AppCompatActivity(), OnItemClickListener {
                                 leaveEditMode()
                             }
                         }
-                                startActivity(Intent(this, GalleryActivity1::class.java))
-
                     }
                 }
                 dialogView.findViewById<Button>(R.id.btnCancel).setOnClickListener {
@@ -232,13 +219,6 @@ class GalleryActivity : AppCompatActivity(), OnItemClickListener {
                 dialog.show()
             }
         }
-
-    }
-    private fun openAudioSelector() {
-        val intent = Intent()
-        intent.type = "audio/*"
-        intent.action = Intent.ACTION_GET_CONTENT
-        startActivityForResult(Intent.createChooser(intent, "Select Audio"), PICK_AUDIO_REQUEST)
     }
     private fun leaveEditMode() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -251,7 +231,6 @@ class GalleryActivity : AppCompatActivity(), OnItemClickListener {
         }
         mAdapter.setEditMode(false)
     }
-
     private fun disableRename() {
         btnDelete.isClickable = false
         btnDelete.backgroundTintList =
@@ -264,7 +243,6 @@ class GalleryActivity : AppCompatActivity(), OnItemClickListener {
             )
         )
     }
-
     private fun disableDelete() {
         btnDelete.isClickable = false
         btnDelete.backgroundTintList =
@@ -277,21 +255,18 @@ class GalleryActivity : AppCompatActivity(), OnItemClickListener {
             )
         )
     }
-
     private fun enableRename() {
         btnDelete.isClickable = true
         btnDelete.backgroundTintList =
             ResourcesCompat.getColorStateList(resources, R.color.grayDark, theme)
         tvRename.setTextColor(ResourcesCompat.getColorStateList(resources, R.color.grayDark, theme))
     }
-
     private fun enableDelete() {
         btnDelete.isClickable = true
         btnDelete.backgroundTintList =
             ResourcesCompat.getColorStateList(resources, R.color.grayDark, theme)
         tvDelete.setTextColor(ResourcesCompat.getColorStateList(resources, R.color.grayDark, theme))
     }
-
     private fun searchDatabase(query: String) {
         lifecycleScope.launch(Dispatchers.IO) {
             val queryResult = db.audioRecordDao().searchDatabase("%$query%")
@@ -302,19 +277,16 @@ class GalleryActivity : AppCompatActivity(), OnItemClickListener {
             }
         }
     }
-
     private fun fetchAll() {
         lifecycleScope.launch(Dispatchers.IO) {
             val queryResult = db.audioRecordDao().getAllSortedByTimestampDescending()
             withContext(Dispatchers.Main) {
                 records.clear()
-//                records.addAll(queryResult)
-                records.addAll(queryResult.filter { it.status == 0 })
+                records.addAll(queryResult.filter { it.status == 1 })
                 mAdapter.notifyDataSetChanged()
             }
         }
     }
-
     override fun onItemClickListener(position: Int) {
         val audioRecord = records[position]
         if (mAdapter.isEditMode()) {
@@ -326,10 +298,12 @@ class GalleryActivity : AppCompatActivity(), OnItemClickListener {
                     disableRename()
                     disableDelete()
                 }
+
                 1 -> {
                     enableDelete()
                     enableRename()
                 }
+
                 else -> {
                     disableRename()
                     enableDelete()
@@ -342,7 +316,6 @@ class GalleryActivity : AppCompatActivity(), OnItemClickListener {
             startActivity(intent)
         }
     }
-
     override fun onItemLongClickListener(position: Int) {
         mAdapter.setEditMode(true)
         records[position].isChecked = !records[position].isChecked

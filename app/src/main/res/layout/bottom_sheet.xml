@@ -8,13 +8,12 @@
     app:layout_behavior="@string/bottom_sheet_behavior"
     android:background="@drawable/background_round"
     android:orientation="vertical">
-    
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Save record?"
-        android:layout_marginTop="20dp"
-        android:textSize="26sp"
+        android:text="Lưu file"
+        android:textSize="20sp"
         android:textAlignment="center"/>
     
     <com.google.android.material.textfield.TextInputLayout
