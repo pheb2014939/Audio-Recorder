@@ -49,7 +49,7 @@ Audio Recorder Application là một ứng dụng để ghi âm âm thanh rò r�
 
 ### Sử dụng 
 
-Sau khi cài đặt và khởi động ứng dụng trên thiết bị. Giao diện chính của ứng dụng sẽ cho phép bạn bắt đầu ghi âm, lưu và phát lại các bản ghi âm.
+Sau khi cài đặt và khởi động ứng dụng trên thiết bị (Android 11). Giao diện chính của ứng dụng sẽ cho phép bạn bắt đầu ghi âm, lưu và phát lại các bản ghi âm.
 
 ### Ghi âm
 
