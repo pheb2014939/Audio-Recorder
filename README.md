@@ -30,7 +30,7 @@ Audio Recorder Application là một ứng dụng để ghi âm âm thanh rò r�
 - Bộ xử lý: Bộ xử lý Intel hoặc AMD đa lõi với hỗ trợ 64-bit.
 - Dung lượng đĩa cứng: Ít nhất 4 GB dung lượng trống, khuyến nghị SSD để cải thiện tốc độ xử lý.
 
-###Phần mềm
+### Phần mềm
 
 - Hệ điều hành: Windows 10 trở lên
 
