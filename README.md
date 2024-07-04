@@ -32,13 +32,13 @@ Audio Recorder Application là một ứng dụng để ghi âm âm thanh rò r�
 
 Sau khi cài đặt và khởi động ứng dụng trên thiết bị. Giao diện chính của ứng dụng sẽ cho phép bạn bắt đầu ghi âm, lưu và phát lại các bản ghi âm.
 
-###Ghi âm
+### Ghi âm
 
 1. Nhấn nút "Record" để bắt đầu ghi âm.
 2. Nhấn nút "Stop" để dừng ghi âm.
 3. Lưu bản ghi âm bằng cách nhấn nút "Save".
 
-###Phát lại và quản lý
+### Phát lại và quản lý
 
 1. Danh sách các bản ghi âm sẽ xuất hiện trên giao diện sau khi bấm vào button List.
 2. Nhấn vào tên bản ghi âm để phát lại.
