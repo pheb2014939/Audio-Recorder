@@ -104,7 +104,7 @@ Sau khi cài đặt và khởi động ứng dụng trên thiết bị (Android 
 ### Phát lại và quản lý
 
 1. Danh sách các bản ghi âm sẽ xuất hiện trên giao diện sau khi bấm vào button List.
-2. Nhấn vào tên bản ghi âm để phát lại.
+2. Nhấn vào tên bản ghi âm để phát lại. Trang phát lại cho phép cắt file, sau khi cắt file được đánh dấu là nghi ngờ sẽ được upload lên database. 
 3. Nhấn nút "Delete" để xóa bản ghi âm không mong muốn.
  
 
