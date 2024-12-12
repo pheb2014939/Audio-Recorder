@@ -2,19 +2,19 @@
 
 ## Mô tả
 
-Audio Recorder Application là một ứng dụng để ghi âm âm thanh rò rỉ nước. Ứng dụng cho phép bạn ghi âm, lưu trữ và quản lý các bản ghi âm của mình một cách hiệu quả trên MySQL Database.
+Audio Recorder Application cho phép bạn ghi âm, lưu trữ và quản lý các bản ghi âm của mình và ghi âm được lưu trên MySQL Database.
 
-## Tính năng chính
+## Chức năng chính
 
-- Ghi âm chất lượng cao và hiển thị sóng.
-- Lưu trữ và quản lý bản ghi âm.
+- Ghi âm và hiển thị sóng.
+- Lưu trữ bản ghi âm.
 - Phát lại các bản ghi âm.
-- Tìm kiếm, sửa và xoá các thông tin của bản ghi âm.
+- Tìm kiếm, sửa và xoá.
 - Upload file ghi âm nghi ngờ bị rò rỉ lên database.
 
 ## Cài đặt
 
-Để cài đặt và chạy ứng dụng trên máy của bạn, hãy làm theo các bước sau:
+Để cài đặt hãy làm theo các bước sau:
 
 ### Yêu cầu hệ thống
 
@@ -107,7 +107,7 @@ Sau khi cài đặt và khởi động ứng dụng trên thiết bị (Android 
 2. Nhấn vào tên bản ghi âm để phát lại. Trang phát lại cho phép cắt file, sau khi cắt file được đánh dấu là nghi ngờ sẽ được upload lên database. 
 3. Nhấn nút "Delete" để xóa bản ghi âm không mong muốn.
 
-### Giao diện ứng dụng DEMO
+ ### Giao diện ứng dụng DEMO
 
 - Thực hiện ghi âm  
 <img width="224" alt="image" src="https://github.com/user-attachments/assets/627bbaf6-2832-4348-8e64-d2cedf24a51a" />
