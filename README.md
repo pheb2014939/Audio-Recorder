@@ -124,9 +124,8 @@ Sau khi cài đặt và khởi động ứng dụng trên thiết bị (Android 
 
 
 
- 
-<img width="214" alt="image" src="https://github.com/user-attachments/assets/9691a3a3-5b39-4713-a3a0-07eaeed19232" />
 - Nghe bản ghi và cắt đoạn có nghi ngờ rò rỉ nước
+<img width="214" alt="image" src="https://github.com/user-attachments/assets/9691a3a3-5b39-4713-a3a0-07eaeed19232" />
 
 
 
