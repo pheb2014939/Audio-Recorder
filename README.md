@@ -106,5 +106,19 @@ Sau khi cài đặt và khởi động ứng dụng trên thiết bị (Android 
 1. Danh sách các bản ghi âm sẽ xuất hiện trên giao diện sau khi bấm vào button List.
 2. Nhấn vào tên bản ghi âm để phát lại. Trang phát lại cho phép cắt file, sau khi cắt file được đánh dấu là nghi ngờ sẽ được upload lên database. 
 3. Nhấn nút "Delete" để xóa bản ghi âm không mong muốn.
+
+### Giao diện ứng dụng DEMO
+
+Thực hiện ghi âm 
+![image](https://github.com/user-attachments/assets/2e2c846b-bf02-4090-9fd4-a71e5f09e6b2)
+
+Danh sách file ghi âm có nghi ngờ rò rỉ nước
+![image](https://github.com/user-attachments/assets/21b60487-f69f-4c62-b4d0-c1b8ce7047cb)
+
+
+Nghe đoạn bản ghi và cắt đoạn có nghi ngờ rò rỉ nước 
+![image](https://github.com/user-attachments/assets/b1db7e56-43ae-491a-be4d-75c57d78ac25)
+
+
  
 
