@@ -110,14 +110,17 @@ Sau khi cài đặt và khởi động ứng dụng trên thiết bị (Android 
 ### Giao diện ứng dụng DEMO
 
 Thực hiện ghi âm 
-![image](https://github.com/user-attachments/assets/2e2c846b-bf02-4090-9fd4-a71e5f09e6b2)
+<img width="224" alt="image" src="https://github.com/user-attachments/assets/627bbaf6-2832-4348-8e64-d2cedf24a51a" />
+
 
 Danh sách file ghi âm có nghi ngờ rò rỉ nước
-![image](https://github.com/user-attachments/assets/21b60487-f69f-4c62-b4d0-c1b8ce7047cb)
+<img width="223" alt="image" src="https://github.com/user-attachments/assets/791147b9-bbd1-43c2-b65c-65a3bf5280e5" />
 
 
-Nghe đoạn bản ghi và cắt đoạn có nghi ngờ rò rỉ nước 
-![image](https://github.com/user-attachments/assets/b1db7e56-43ae-491a-be4d-75c57d78ac25)
+
+Nghe bản ghi và cắt đoạn có nghi ngờ rò rỉ nước 
+<img width="214" alt="image" src="https://github.com/user-attachments/assets/9691a3a3-5b39-4713-a3a0-07eaeed19232" />
+
 
 
  
